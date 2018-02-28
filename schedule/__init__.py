@@ -205,22 +205,26 @@ class Job(object):
                   for k, v in self.job_func.keywords.items()]
         call_repr = job_func_name + '(' + ', '.join(args + kwargs) + ')'
 
+        weekday = ' on ' + self.start_day if self.start_day else ''
+
         if self.at_time is not None:
-            return 'Every %s %s at %s do %s %s' % (
+            return 'Every %s %s%s at %s do %s %s' % (
                    self.interval,
                    self.unit[:-1] if self.interval == 1 else self.unit,
+                   weekday,
                    self.at_time, call_repr, timestats)
         else:
             fmt = (
                 'Every %(interval)s ' +
                 ('to %(latest)s ' if self.latest is not None else '') +
-                '%(unit)s do %(call_repr)s %(timestats)s'
+                '%(unit)s%(weekday)s do %(call_repr)s %(timestats)s'
             )
 
             return fmt % dict(
                 interval=self.interval,
                 latest=self.latest,
                 unit=(self.unit[:-1] if self.interval == 1 else self.unit),
+                weekday=weekday,
                 call_repr=call_repr,
                 timestats=timestats
             )
