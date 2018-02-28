@@ -282,8 +282,20 @@ class Job(object):
         return self.weeks
 
     @property
+    def mondays(self):
+        assert self.interval > 1, 'Use monday instead of mondays'
+        self.start_day = 'monday'
+        return self.weeks
+
+    @property
     def tuesday(self):
         assert self.interval == 1, 'Use tuesdays instead of tuesday'
+        self.start_day = 'tuesday'
+        return self.weeks
+
+    @property
+    def tuesdays(self):
+        assert self.interval > 1, 'Use tuesday instead of tuesdays'
         self.start_day = 'tuesday'
         return self.weeks
 
@@ -294,8 +306,20 @@ class Job(object):
         return self.weeks
 
     @property
+    def wednesdays(self):
+        assert self.interval > 1, 'Use wednesday instead of wednesdays'
+        self.start_day = 'wednesday'
+        return self.weeks
+
+    @property
     def thursday(self):
         assert self.interval == 1, 'Use thursday instead of thursday'
+        self.start_day = 'thursday'
+        return self.weeks
+
+    @property
+    def thursdays(self):
+        assert self.interval > 1, 'Use thursday instead of thursdays'
         self.start_day = 'thursday'
         return self.weeks
 
@@ -306,14 +330,32 @@ class Job(object):
         return self.weeks
 
     @property
+    def fridays(self):
+        assert self.interval > 1, 'Use friday instead of fridays'
+        self.start_day = 'friday'
+        return self.weeks
+
+    @property
     def saturday(self):
         assert self.interval == 1, 'Use saturdays instead of saturday'
         self.start_day = 'saturday'
         return self.weeks
 
     @property
+    def saturdays(self):
+        assert self.interval > 1, 'Use saturday instead of saturdays'
+        self.start_day = 'saturday'
+        return self.weeks
+
+    @property
     def sunday(self):
         assert self.interval == 1, 'Use sundays instead of sunday'
+        self.start_day = 'sunday'
+        return self.weeks
+
+    @property
+    def sundays(self):
+        assert self.interval > 1, 'Use sunday instead of sundays'
         self.start_day = 'sunday'
         return self.weeks
 
@@ -439,7 +481,8 @@ class Job(object):
             weekday = weekdays.index(self.start_day)
             days_ahead = weekday - self.next_run.weekday()
             if days_ahead <= 0:  # Target day already happened this week
-                days_ahead += 7
+                days_ahead += 7 * interval
+
             self.next_run += datetime.timedelta(days_ahead) - self.period
         if self.at_time is not None:
             assert self.unit in ('days', 'hours') or self.start_day is not None
@@ -462,7 +505,7 @@ class Job(object):
                     self.next_run = self.next_run - datetime.timedelta(hours=1)
         if self.start_day is not None and self.at_time is not None:
             # Let's see if we will still make that time we specified today
-            if (self.next_run - datetime.datetime.now()).days >= 7:
+            if (self.next_run - datetime.datetime.now()).days >= 7 * interval:
                 self.next_run -= self.period
 
 
